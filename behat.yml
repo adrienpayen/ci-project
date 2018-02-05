@@ -3,9 +3,13 @@ default:
         Context:  "%paths.base%/features"
     suites:
         back-office:
+            type: symfony_bundle
+            bundle: AppBundle
             mink_session: default_session
             paths: [ "%paths.base%/features/back-office" ]
-            contexts: [ Context\BackOffice\MinkContext, Knp\FriendlyContexts\Context\PageContext ]
+            contexts:
+                - Context\BackOffice\MinkContext
+                - Knp\FriendlyContexts\Context\PageContext
 
     extensions:
         Behat\Symfony2Extension: ~

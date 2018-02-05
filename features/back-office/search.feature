@@ -1,5 +1,8 @@
-Feature: The homepage is visible
+Feature: The search working
 
-  Scenario: I can see the home page
-    Given I am on "/"
-    Then I should see "Symfony demo"
+  @javascript
+  Scenario: I can search an article
+    Given I am on "/en/blog/search"
+    When I fill in "Search for..." with "lorem"
+    And I wait for autocomplete results
+    Then I should see "Lorem Ipsum"

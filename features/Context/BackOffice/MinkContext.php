@@ -5,6 +5,7 @@ namespace Context\BackOffice;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\Exception;
+
 use Knp\FriendlyContexts\Context\MinkContext as BaseMinkContext;
 
 class MinkContext extends BaseMinkContext
@@ -48,24 +49,17 @@ class MinkContext extends BaseMinkContext
 	/**
 	 * @AfterStep
 	 */
-	public function printLastResponseOnError(AfterStepScope $event)
+	public function takeScreenShotAfterFailedStep(afterStepScope $event)
 	{
 		if (!$event->getTestResult()->isPassed()) {
-			$this->saveDebugScreenshot();
-		}
-	}
+			$filename = microtime(true).'.png';
+			$path = __DIR__.'/../../../behat_screenshots';
+			if (!file_exists($path)) {
+				mkdir($path);
+			}
 
-	/**
-	 * @Then /^save screenshot$/
-	 */
-	public function saveDebugScreenshot()
-	{
-		$filename = microtime(true).'.png';
-		$path = __DIR__.'/../../../behat_screenshots';
-		if (!file_exists($path)) {
-			mkdir($path);
+			$this->saveScreenshot($filename, $path);
 		}
-		$this->saveScreenshot($filename, $path);
 	}
 
 	/**
