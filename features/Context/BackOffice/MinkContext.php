@@ -3,6 +3,7 @@
 namespace Context\BackOffice;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Knp\FriendlyContexts\Context\MinkContext as BaseMinkContext;
 
 class MinkContext extends BaseMinkContext
@@ -52,6 +53,7 @@ class MinkContext extends BaseMinkContext
 			$this->saveDebugScreenshot();
 		}
 	}
+
 	/**
 	 * @Then /^save screenshot$/
 	 */
@@ -112,4 +114,12 @@ class MinkContext extends BaseMinkContext
         }
         throw new \Behat\Mink\Exception\ElementNotFoundException($this->getSession(), 'popup', 'button', $popup);
     }
+
+	/**
+	 * @When I test javascript
+	 */
+	public function iTestJavascript() {
+		$title = $this->getSession()->executeScript("return 'string';");
+		echo 'I\'m correctly on the webpage entitled "'.$title.'"';
+	}
 }
