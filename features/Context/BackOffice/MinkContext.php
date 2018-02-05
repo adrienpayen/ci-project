@@ -4,6 +4,7 @@ namespace Context\BackOffice;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\Exception;
 use Knp\FriendlyContexts\Context\MinkContext as BaseMinkContext;
 
 class MinkContext extends BaseMinkContext
@@ -85,6 +86,14 @@ class MinkContext extends BaseMinkContext
     }
 
     /**
+     * @Given I wait for javascript
+     */
+    public function iWaitForJavascript()
+    {
+        $this->getSession()->wait(5000, "");
+    }
+
+    /**
      * @When I click :button
      * @param $button
      * @throws \Behat\Mink\Exception\ElementNotFoundException
@@ -97,22 +106,21 @@ class MinkContext extends BaseMinkContext
     }
 
     /**
-     * @Then /^(?:|I )should see popup "(?P<div>[^"]*)"$/
+     * @Then I should see popup :popup
+     * @param $popup
+     * @throws \Exception
      */
     public function popupElementOnPage($popup) {
-        $element = $this->getSession()->getPage();
-        $nodes = $element->findAll('css', '.source-code button');
-        foreach ($nodes as $node) {
-            if ($node->getAttribute('data-target') === $popup) {
-                if ($node->isVisible()) {
-                    return;
-                }
-                else {
-                    throw new \Exception("Popup \"$popup\" not visible.");
-                }
+        $statement = $this->getSession()->evaluateScript('
+            if($("'.$popup.'").css("display", "block")) {
+                return true;    
             }
+            return false;'
+        );
+
+        if(!$statement) {
+            throw new \Exception('No popup found');
         }
-        throw new \Behat\Mink\Exception\ElementNotFoundException($this->getSession(), 'popup', 'button', $popup);
     }
 
 	/**
