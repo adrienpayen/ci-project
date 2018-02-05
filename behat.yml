@@ -1,0 +1,18 @@
+default:
+    autoload:
+        Context:  "%paths.base%/features"
+    suites:
+        back-office:
+            paths: [ "%paths.base%/features/back-office" ]
+            contexts: [ Context\BackOffice\MinkContext, Knp\FriendlyContexts\Context\PageContext ]
+
+    extensions:
+        Behat\Symfony2Extension: ~
+        Knp\FriendlyContexts\Extension: ~
+        Behat\MinkExtension:
+            base_url: "http://127.0.0.1/"
+            browser_name: chrome
+            symfony2: ~
+            sessions:
+                default_session:
+                    symfony2: ~
