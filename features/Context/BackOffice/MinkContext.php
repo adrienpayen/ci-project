@@ -73,4 +73,43 @@ class MinkContext extends BaseMinkContext
 		$this->getSession()->executeScript("var e = new Event('submit');document.getElementsByClassName('SearchFormBar')[0].dispatchEvent(e);");
 		$this->getSession()->wait(5000, "jQuery('.contentDetails').children().length > 1");
 	}
+
+    /**
+     * @Given I wait for autocomplete results
+     */
+    public function iWaitForAutocompleteResults()
+    {
+        $this->getSession()->wait(5000, "jQuery('.searchResults').children().length > 1");
+    }
+
+    /**
+     * @When I click :button
+     * @param $button
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
+    public function iClickShowCode($button)
+    {
+        $this->getSession()->executeScript(
+            "$('#".$button."').click()"
+        );
+    }
+
+    /**
+     * @Then /^(?:|I )should see popup "(?P<div>[^"]*)"$/
+     */
+    public function popupElementOnPage($popup) {
+        $element = $this->getSession()->getPage();
+        $nodes = $element->findAll('css', '.source-code button');
+        foreach ($nodes as $node) {
+            if ($node->getAttribute('data-target') === $popup) {
+                if ($node->isVisible()) {
+                    return;
+                }
+                else {
+                    throw new \Exception("Popup \"$popup\" not visible.");
+                }
+            }
+        }
+        throw new \Behat\Mink\Exception\ElementNotFoundException($this->getSession(), 'popup', 'button', $popup);
+    }
 }
