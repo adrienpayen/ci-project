@@ -3,6 +3,7 @@
 namespace Context\BackOffice;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Knp\FriendlyContexts\Context\MinkContext as BaseMinkContext;
 
 class MinkContext extends BaseMinkContext
@@ -52,6 +53,7 @@ class MinkContext extends BaseMinkContext
 			$this->saveDebugScreenshot();
 		}
 	}
+
 	/**
 	 * @Then /^save screenshot$/
 	 */
@@ -72,5 +74,13 @@ class MinkContext extends BaseMinkContext
 	{
 		$this->getSession()->executeScript("var e = new Event('submit');document.getElementsByClassName('SearchFormBar')[0].dispatchEvent(e);");
 		$this->getSession()->wait(5000, "jQuery('.contentDetails').children().length > 1");
+	}
+
+	/**
+	 * @When I test javascript
+	 */
+	public function iTestJavascript() {
+		$title = $this->getSession()->executeScript("return 'string';");
+		echo 'I\'m correctly on the webpage entitled "'.$title.'"';
 	}
 }

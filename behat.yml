@@ -3,6 +3,7 @@ default:
         Context:  "%paths.base%/features"
     suites:
         back-office:
+            mink_session: default_session
             paths: [ "%paths.base%/features/back-office" ]
             contexts: [ Context\BackOffice\MinkContext, Knp\FriendlyContexts\Context\PageContext ]
 
@@ -11,8 +12,16 @@ default:
         Knp\FriendlyContexts\Extension: ~
         Behat\MinkExtension:
             base_url: "http://127.0.0.1/"
-            browser_name: chrome
-            symfony2: ~
+            show_auto: true
+            show_cmd: 'chrome %s'
             sessions:
                 default_session:
                     symfony2: ~
+                chrome_javascript_session:
+                    selenium2:
+                        wd_host: "http://chrometesting:5555/wd/hub"
+                        browser: chrome
+                firefox_javascript_session:
+                    selenium2:
+                        wd_host: "http://firefoxtesting:5555/wd/hub"
+                        browser: firefox
